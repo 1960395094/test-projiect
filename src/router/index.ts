@@ -7,10 +7,9 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'home',
     component: () => import('../views/home/index.vue'),
     children: [
-      { name: 'dataSet', path: '/dateSet', component: () => import('../views/dataSet/index.vue') },
+      { name: 'dataSet', path: '', component: () => import('../views/dataSet/index.vue') },
       { name: 'importData', path: '/importData', component: () => import('../views/importData/index.vue') }
     ]
   },

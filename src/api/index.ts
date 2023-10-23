@@ -12,14 +12,13 @@ export function queryDataSet(): Promise<IFiles[]> {
       const data = new Array(6).fill(1).map((_, i: number): IFiles => {
         return {
           id: i,
-          fileName: `文件${i}`,
+          fileName: `文件${i + 1}.txt`,
           uploadTime: new Date().toLocaleString(),
           fileSize: '100kb',
-          status: 0
+          status: i % 2 === 0 ? 0 : 1
         }
       })
-      console.log(data)
       reslove(data)
-    }, 100)
+    }, 500)
   })
 }

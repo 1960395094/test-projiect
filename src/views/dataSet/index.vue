@@ -1,47 +1,69 @@
 <template>
   <h2>文件数：{{count}}个</h2>
-  <n-table striped>
-      <thead>
-        <tr>
-          <th>文件名</th>
-          <th>上传时间</th>
-          <th>文件大小</th>
-          <th>状态</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(v) in files" :key="v.id">
-          <td>{{ v.fileName }}</td>
-          <td>{{ v.uploadTime }}</td>
-          <td>{{ v.fileSize }}</td>
-          <td>
-            <i class="dot" :style="{ backgroundColor: v.status ? 'green' : '#efefef' }"></i>
-            <span>{{v.status ? '可用' : '不可用'}}</span>
-          </td>
-          <td>...</td>
-        </tr>
-      </tbody>
-    </n-table>
+  <n-data-table
+    :columns="columns"
+    :data="files"
+    :pagination="pagination"
+    :loading="isLoading"
+    striped
+  />
+
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, h } from 'vue'
 import { queryDataSet, IFiles } from '../../api'
+const columns = [{
+  title: '文件名',
+  key: 'fileName'
+}, {
+  title: '上传时间',
+  key: 'uploadTime'
+}, {
+  title: '文件大小',
+  key: 'fileSize'
+}, {
+  title: '状态',
+  key: 'status',
+  
+  render(row) {
+    console.log(row)
+    return h('div', null, [h('i', {
+      class: 'dot',
+      style: {
+        backgroundColor: row.status ? 'green' : '#efefef'
+      }
+    }), h('span', null, row.status ? '可用' : '不可用')])
+  }
+}, {
+  title: '',
+  key: 'more',
+  render() {
+    return '...'
+  }
+}]
 export default defineComponent({
   setup() {
     const files= ref<IFiles[]>([])
     const count = ref<number>(0)
+    const isLoading = ref<boolean>(false)
     const getData = async () => {
+      isLoading.value = true
+
       const data = await queryDataSet()
+      isLoading.value = false
       files.value = data
-      console.log(data)
       count.value = data.length
     }
+
     getData()
+
     return {
       count,
-      files
+      files,
+      columns,
+      pagination: false as const,
+      isLoading
     }
   }
 })
@@ -52,7 +74,7 @@ h2 {
   font-weight: normal;
   margin-bottom: 16px;
 }
-.dot {
+:deep(.dot) {
   display: inline-block;
   width: 8px;
   height: 8px;
