@@ -3,14 +3,10 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect: '/home',
-  },
-  {
-    path: '/home',
     component: () => import('../views/home/index.vue'),
     children: [
       { name: 'dataSet', path: '', component: () => import('../views/dataSet/index.vue') },
-      { name: 'importData', path: '/importData', component: () => import('../views/importData/index.vue') }
+      { name: 'importData', path: 'importData', component: () => import('../views/importData/index.vue') }
     ]
   },
   {
